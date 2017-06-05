@@ -1,0 +1,12 @@
+debug: true
+build:
+  image: 'node:6-alpine'
+  commands:
+    - "./.docker/build-drone.sh"
+    - "npm run build"
+    - "npm prune --production"
+
+cache:
+  mount:
+    - node_modules
+    - .git
