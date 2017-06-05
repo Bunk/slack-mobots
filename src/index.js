@@ -1,5 +1,5 @@
 const config = require( "./config" );
-const botFactory = require( "./bot" );
+const appFactory = require( "./app" );
 const pkg = require( "../package.json" );
 
-module.exports = botFactory( config, pkg ).start();
+module.exports = appFactory( config, pkg ).start();

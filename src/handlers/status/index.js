@@ -1,5 +1,12 @@
+/* eslint-disable global-require */
 const aupair = require( "aupair" );
 const humanize = require( "humanize-duration" );
+
+// Initialize our checkers
+const dependencies = [
+	require( "./github" ),
+	require( "./hockeyapp" )
+];
 
 const colors = {
 	degraded: "#fced00",
@@ -7,22 +14,21 @@ const colors = {
 	unhealthy: "#d96f2a"
 };
 
-module.exports = ( { config, log, pkg, controller } ) => {
-	controller.hears(
-		[ /(status|uptime)(\?)?$/i ],
-		"direct_message,direct_mention,mention",
-		async ( bot, message ) => {
-			const hostname = config.identity;
-			const uptime = humanize( process.uptime() * 1000 ); // eslint-disable-line no-magic-numbers
-			const status = await aupair.check();
-			bot.reply( message, {
-				fallback: `${ bot.identity.name } v${ pkg.version } ${ transformState( status ) }`,
+module.exports = ( app ) => {
+	const { config, pkg, slapp } = app;
+
+	dependencies.forEach( dependency => dependency( app ) );
+
+	slapp.message( /(status|uptime)(\?)?$/i, [ "direct_message,direct_mention,mention" ], msg => {
+		const hostname = config.identity;
+		const uptime = humanize( process.uptime() * 1000 ); // eslint-disable-line no-magic-numbers
+		aupair.check().then( status => {
+			msg.say( {
+				text: `v${ pkg.version } — ${ transformState( status ) }`,
+				fallback: `v${ pkg.version } Status: ${ transformState( status ) }`,
 				attachments: [ {
 					mrkdwn_in: [ "text" ], // eslint-disable-line camelcase
 					color: transformColor( status ),
-					title: `${ bot.identity.name } v${ pkg.version }`,
-					fallback: `${ bot.identity.name } v${ pkg.version } Status: ${ transformState( status ) }`,
-					text: transformMessage( status ),
 					fields: [
 						...transformDetails( status ),
 						{ title: "Uptime", value: uptime, short: true },
@@ -31,6 +37,7 @@ module.exports = ( { config, log, pkg, controller } ) => {
 				} ]
 			} );
 		} );
+	} );
 };
 
 function transformColor( status ) {
@@ -62,11 +69,4 @@ function transformDetails( status ) {
 			short: true
 		};
 	} );
-}
-
-function transformMessage( status ) {
-	if ( status.degraded ) {
-		return "Here, hold my beer... :beer:";
-	}
-	return status.healthy ? "I'm killin' it today! :partyparrot:" : "Life and everything is *hard* :sadpanda:";
 }
