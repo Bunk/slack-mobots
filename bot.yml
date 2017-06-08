@@ -1,0 +1,10 @@
+name: mobot
+description: Mobile automation bot
+avatar: resources/avatar.jpg
+background: resources/background.jpg
+config:
+  - name: GITHUB_TOKEN
+    info: This is a unique GitHub access token for the user the bot is spoofing
+    type: secret
+  - name: LOG_LEVEL
+    info: One of ( debug, info, warn, error )
