@@ -13,6 +13,7 @@ module.exports = {
 		level: process.env.LOG_LEVEL || "info"
 	},
 	github: {
+		token: process.env.GITHUB_TOKEN || "",
 		repositories: {
 			upstream: {
 				name: "leankit-mobile",
@@ -26,9 +27,6 @@ module.exports = {
 		token: process.env.HOCKEY_TOKEN || ""
 	},
 	slack: {
-		token: process.env.SLACK_TOKEN || "",
-		clientId: process.env.SLACK_CLIENT_ID || "",
-		clientSecret: process.env.SLACK_CLIENT_SECRET || "",
-		verificationToken: process.env.SLACK_VERIFICATION_TOKEN || ""
+		verifyToken: process.env.SLACK_VERIFY_TOKEN || ""
 	}
 };

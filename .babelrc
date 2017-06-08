@@ -1,11 +1,6 @@
 {
-	"presets": [ "node6" ],
-	"plugins": [
-		"add-module-exports",
-		"babel-root-import",
-		"babel-plugin-transform-async-to-generator",
-		"babel-plugin-transform-object-rest-spread"
-	],
+	"presets": [ "node6", "stage-0" ],
+	"plugins": [ "transform-runtime", "add-module-exports" ],
 	"env": {
 		"test": {
 			"plugins": [ "istanbul" ]

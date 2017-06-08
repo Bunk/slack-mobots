@@ -1,7 +1,6 @@
 extends:
   - leankit
   - leankit/es6
-  - plugin:import/errors
 globals:
   testHelpers: false
 parser: babel-eslint

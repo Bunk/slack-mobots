@@ -2,9 +2,9 @@ FROM node:6-alpine
 MAINTAINER Mobile Squad
 
 ENV APP_PATH /app
+WORKDIR $APP_PATH
 
 # Install dependencies and app
-WORKDIR $APP_PATH
 COPY . .
 RUN .docker/build.sh && rm -rf .docker
 

@@ -1,12 +1,14 @@
 const handlers = require( "./handlers" );
 const bot = require( "./bot" );
+const advice = require( "./services/advice" );
 const logger = require( "./services/logger" );
 const colors = require( "./services/colors" );
+const storage = require( "./services/storage" );
 const git = require( "./services/git" );
 
 module.exports = ( config, pkg ) => {
 	const app = {
-		config, pkg, colors,
+		config, pkg, colors, advice,
 		log: logger( config ),
 		start() {
 			bot( app )
@@ -23,6 +25,7 @@ module.exports = ( config, pkg ) => {
 		}
 	};
 
+	app.storage = storage( app );
 	app.git = git( app );
 
 	return app;

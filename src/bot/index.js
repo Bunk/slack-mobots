@@ -9,7 +9,7 @@ module.exports = ( app ) => {
 			const { port } = app.config.web;
 
 			app.slapp = slappFactory( {
-				verify_token: app.config.slackVerificationToken,
+				verify_token: app.config.slack.verifyToken,
 				log: true,
 				colors: true,
 				context: contextFactory(),

@@ -3,4 +3,5 @@
 .vscode
 .DS_Store*
 npm-debug.log
-src
+node_modules
+lib

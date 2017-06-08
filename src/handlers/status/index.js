@@ -19,12 +19,12 @@ module.exports = ( app ) => {
 
 	dependencies.forEach( dependency => dependency( app ) );
 
-	slapp.message( /(status|uptime)(\?)?$/i, [ "direct_message,direct_mention,mention" ], msg => {
+	slapp.message( /(status|uptime|hi)(\?)?$/i, [ "direct_message", "direct_mention", "mention" ], msg => {
 		const hostname = config.identity;
 		const uptime = humanize( process.uptime() * 1000 ); // eslint-disable-line no-magic-numbers
 		aupair.check().then( status => {
 			msg.say( {
-				text: `v${ pkg.version } — ${ transformState( status ) }`,
+				text: `*v${ pkg.version }* — ${ transformMessage( status ) }`,
 				fallback: `v${ pkg.version } Status: ${ transformState( status ) }`,
 				attachments: [ {
 					mrkdwn_in: [ "text" ], // eslint-disable-line camelcase
@@ -69,4 +69,11 @@ function transformDetails( status ) {
 			short: true
 		};
 	} );
+}
+
+function transformMessage( status ) {
+	if ( status.degraded ) {
+		return "This is fine.";
+	}
+	return status.healthy ? "I'm up!" : "This is not fine.";
 }
