@@ -23,18 +23,7 @@ module.exports = ( app ) => {
 			steps.chat( context ).ask( questions.confirmRelease )
 		],
 		release: ( context ) => [
-			// steps.files.updatePackageVersion,
-			// steps.files.updateChangeLog,
-			// steps.github( msg ).stageFile( state => state.filePaths.package ),
-			// steps.github( msg ).stageFile( state => state.filePaths.changeLog ),
-			// steps.github( msg ).branchFrom( state => `heads/${ state.branches.head }` ),
-			// steps.github( msg ).commitStaged,
-			// steps.github( msg ).openPullRequest( state => state.branches.current ),
-			// steps.github( msg ).mergePullRequest( "merge" ),
-			// steps.github( msg ).mergeFastForward( state => state.branches.base ),
-			// steps.github( msg ).tagVersion,
-			// steps.github( msg ).createRelease,
-			// steps.github( msg ).deleteBranch( state => state.branches.current ),
+			steps.github( context ).release,
 			steps.deleteState,
 			steps.chat( context ).say( questions.released, { deleteOriginal: true } )
 		],

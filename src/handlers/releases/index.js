@@ -20,7 +20,8 @@ module.exports = ( app ) => {
 			.replace( /[\u201C\u201D]/g, '"' );	// replace fancy double-quotes
 		const parsed = yargs( params );
 		const { name, version } = parsed;
-		let { notes = name, platform = "ios,android" } = parsed;
+		const { notes = name, platform = "ios,android", branch = "develop" } = parsed;
+		let { repo = "BanditSoftware/leankit-mobile" } = parsed;
 
 		function showHelp( validation ) {
 			return msg.say( `${ validation }\n\n` +
@@ -35,11 +36,17 @@ module.exports = ( app ) => {
 			return showHelp( "A semantic release version is required." );
 		}
 
+		repo = repo.split( "/" );
+		repo = { user: repo[ 0 ], name: repo[ 1 ] };
+
 		const state = {
+			repo,
 			id: `${ msg.meta.team_id }|mobile|release|${ shortid.generate() }`,
-			repo: { user: "BanditSoftware", name: "leankit-mobile" },
 			versions: {
 				latest: version
+			},
+			branches: {
+				current: branch
 			},
 			answers: {
 				name, version,
@@ -53,27 +60,21 @@ module.exports = ( app ) => {
 			.catch( err => onError( err, context( msg ) ) );
 	} );
 
-	slapp.action( "tag-release", "confirm_version_bump", ( msg, data ) => {
-		const { id, key, value } = JSON.parse( data );
-		const ctx = context( msg );
-		fsm.lookupOrCreate( id )
-			.then( api => api.answer( ctx, { key, value } ) )
-			.catch( err => onError( err, ctx ) );
-	} );
-
-	slapp.action( "tag-release", "confirm_release", ( msg, data ) => {
-		const { id, key, value } = JSON.parse( data );
-		const ctx = context( msg );
-		fsm.lookupOrCreate( id )
-			.then( api => api.answer( ctx, { key, value } ) )
-			.catch( err => onError( err, ctx ) );
-	} );
-
 	slapp.action( "tag-release", "cancel", ( msg, data ) => {
 		const { id } = JSON.parse( data );
 		const ctx = context( msg );
 		fsm.lookupOrCreate( id )
 			.then( api => api.cancel( ctx ) )
 			.catch( err => onError( err, ctx ) );
+	} );
+
+	[ "confirm_version_bump", "confirm_release" ].forEach( action => {
+		slapp.action( "tag-release", action, ( msg, data ) => {
+			const { id, key, value } = JSON.parse( data );
+			const ctx = context( msg );
+			fsm.lookupOrCreate( id )
+				.then( api => api.answer( ctx, { key, value } ) )
+				.catch( err => onError( err, ctx ) );
+		} );
 	} );
 };

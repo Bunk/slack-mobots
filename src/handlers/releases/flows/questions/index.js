@@ -29,7 +29,7 @@ module.exports = {
 			id: "confirmRelease",
 			message: {
 				attachments: [ {
-					pretext: "Please confirm this release:",
+					pretext: "Is this what you want to release?",
 					title: state.release.name,
 					footer: `<@${ state.author.id }> as ${ state.user.github.name }`,
 					footer_icon: state.author.profile.image_48,
@@ -51,7 +51,7 @@ module.exports = {
 	released( state ) {
 		return {
 			message: {
-				text: "Tagged & Released:",
+				text: "",
 				attachments: [ {
 					color: "#93c540",
 					title: `${ state.release.name }`,

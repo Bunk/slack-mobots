@@ -31,7 +31,9 @@ module.exports = ( app ) => {
 				name: state.answers.name,
 				notes: state.answers.notes.map( v => `* ${ v }` ).join( "\n" ),
 				platforms: state.answers.platforms.map( emojisize ).join( " " ),
-				version: state.versions.current
+				version: state.versions.current,
+				tag: `v.${ state.versions.current }`,
+				target: state.branches.current
 			} );
 		},
 		storeState( state ) {
