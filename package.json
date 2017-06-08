@@ -1,6 +1,6 @@
 {
   "name": "mobile-mobot",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "description": "Mobile automation bot",
   "private": true,
   "main": "lib/index.js",
