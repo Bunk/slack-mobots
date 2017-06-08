@@ -3,13 +3,11 @@ const Octokat = require( "octokat" );
 const clientCache = {};
 
 module.exports = ( { config, advice } ) => {
-	function create( token ) {
-		return new Octokat( { token } );
-	}
-
-	return ( key, token ) => {
+	return ( context ) => {
+		const key = context.meta.teamId;
 		if ( !clientCache[ key ] ) {
-			clientCache[ key ] = create( token );
+			const token = config.github.token || context.meta.config.GITHUB_TOKEN;
+			clientCache[ key ] = new Octokat( { token } );
 		}
 		return clientCache[ key ];
 	};

@@ -4,7 +4,8 @@ module.exports = app => {
 		init() {
 			const modules = [
 				require( "./status" ),
-				require( "./releases" )
+				require( "./releases" ),
+				require( "./branches" )
 				// require( "./releases/pipelines/fsm2" )
 				// require( "./releases" )
 			];

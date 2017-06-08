@@ -2,17 +2,10 @@ const yargs = require( "yargs-parser" );
 const shortid = require( "shortid" );
 const semver = require( "semver" );
 const fsmFactory = require( "./fsm" );
-const contextFactory = require( "./context/slapp" );
 
 module.exports = ( app ) => {
-	const { slapp } = app;
+	const { slapp, context, utils } = app;
 	const fsm = fsmFactory( app );
-	const context = contextFactory( app );
-
-	function onError( err, ctx ) {
-		const body = `:sweat: Woops!  \`${ err.message }\`\n\`\`\`${ err.stack }\`\`\``;
-		ctx.respond( body );
-	}
 
 	slapp.message( /create release(.*)/i, [ "direct_message", "direct_mention", "mention" ], ( msg, opt ) => {
 		const params = opt.trim()
@@ -57,7 +50,7 @@ module.exports = ( app ) => {
 		};
 		fsm.lookupOrCreate( state.id, () => state )
 			.then( api => api.start( context( msg ) ) )
-			.catch( err => onError( err, context( msg ) ) );
+			.catch( utils.onError( context( msg ) ) );
 	} );
 
 	slapp.action( "tag-release", "cancel", ( msg, data ) => {
@@ -65,7 +58,7 @@ module.exports = ( app ) => {
 		const ctx = context( msg );
 		fsm.lookupOrCreate( id )
 			.then( api => api.cancel( ctx ) )
-			.catch( err => onError( err, ctx ) );
+			.catch( utils.onError( context( msg ) ) );
 	} );
 
 	[ "confirm_version_bump", "confirm_release" ].forEach( action => {
@@ -74,7 +67,7 @@ module.exports = ( app ) => {
 			const ctx = context( msg );
 			fsm.lookupOrCreate( id )
 				.then( api => api.answer( ctx, { key, value } ) )
-				.catch( err => onError( err, ctx ) );
+				.catch( utils.onError( context( msg ) ) );
 		} );
 	} );
 };
