@@ -1,23 +1,27 @@
 const stepsFactory = require( "./steps" );
-const questions = require( "./questions" );
+const questionsFactory = require( "./questions" );
 
 module.exports = ( app ) => {
 	const steps = stepsFactory( app );
+	const questions = questionsFactory( app );
 
 	return {
 		checkAccess: ( context ) => [
 			steps.chat( context ).fetchAuthor,
 			steps.github( context ).validateAccess,
-			steps.github( context ).getLatestVersion,
 			function hasAccess( state ) {
 				state.answers.checkAccess = true;
 			}
 		],
 		gatherVersionBump: ( context ) => [
 			steps.chat( context ).ask( questions.bumpVersion )
-			// steps.slack( msg ).ask( "gatherVersionBump", questions.confirmVersionBump )
+		],
+		gatherBranch: ( context ) => [
+			steps.github( context ).getAvailableBranches,
+			steps.chat( context ).ask( questions.selectBranch )
 		],
 		confirmRelease: ( context ) => [
+			steps.github( context ).getLatestVersion,
 			steps.bumpVersion,
 			steps.createRelease,
 			steps.chat( context ).ask( questions.confirmRelease )

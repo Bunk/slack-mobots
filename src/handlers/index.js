@@ -4,10 +4,7 @@ module.exports = app => {
 		init() {
 			const modules = [
 				require( "./status" ),
-				require( "./releases" ),
-				require( "./branches" )
-				// require( "./releases/pipelines/fsm2" )
-				// require( "./releases" )
+				require( "./releases" )
 			];
 			modules.forEach( module => module( app ) );
 		}

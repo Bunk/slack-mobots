@@ -9,12 +9,17 @@ module.exports = ( app ) => {
 		github: githubSteps( app ),
 		chat: chatSteps( app ),
 		bumpVersion( state ) {
+			if ( _.get( state, "answers.version" ) ) {
+				return;
+			}
+
 			const { versions: { latest }, answers: { versionBump } } = state;
 			const bumped = semver.inc( latest, versionBump );
 			if ( !bumped ) {
 				throw new Error( `Couldn't bump version '${ latest }' as a ${ versionBump } release` );
 			}
-			_.set( state, "versions.current", bumped );
+
+			_.set( state, "answers.version", bumped );
 		},
 		createRelease( state ) {
 			function emojisize( platform ) {
@@ -31,9 +36,9 @@ module.exports = ( app ) => {
 				name: state.answers.name,
 				notes: state.answers.notes.map( v => `* ${ v }` ).join( "\n" ),
 				platforms: state.answers.platforms.map( emojisize ).join( " " ),
-				version: state.versions.current,
-				tag: `v.${ state.versions.current }`,
-				target: state.branches.current
+				version: state.answers.version,
+				tag: `v.${ state.answers.version }`,
+				target: state.answers.selectedBranch
 			} );
 		},
 		storeState( state ) {

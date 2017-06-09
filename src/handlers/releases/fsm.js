@@ -3,6 +3,7 @@ const flowFactory = require( "./flows" );
 
 const questions = [
 	{ flow: "gatherVersionBump", key: "versionBump" },
+	{ flow: "gatherBranch", key: "selectedBranch" },
 	{ flow: "confirmRelease", key: "confirmRelease" }
 ];
 
@@ -21,21 +22,27 @@ module.exports = ( app ) => {
 
 		return async ( context ) => {
 			state.answers = state.answers || {};
+			try {
+				if ( state.cancelled ) {
+					return await executeAndSave( flows.cancelled( context ) );
+				}
 
-			if ( state.cancelled ) {
-				return executeAndSave( flows.cancelled( context ) );
+				if ( !state.answers.checkAccess ) {
+					await executeAndSave( flows.checkAccess( context ) );
+				}
+
+				const next = questions.find( q => !state.answers[ q.key ] );
+				if ( next ) {
+					return await executeAndSave( flows[ next.flow ]( context ) );
+				}
+
+				return await executeAndSave( flows.release( context ) );
+			} catch ( err ) {
+				if ( state && state.id ) {
+					await storage.del( state.id );
+				}
+				throw err;
 			}
-
-			if ( !state.answers.checkAccess ) {
-				await executeAndSave( flows.checkAccess( context ) );
-			}
-
-			const next = questions.find( q => !state.answers[ q.key ] );
-			if ( next ) {
-				return executeAndSave( flows[ next.flow ]( context ) );
-			}
-
-			return executeAndSave( flows.release( context ) );
 		};
 	}
 

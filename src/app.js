@@ -26,7 +26,6 @@ module.exports = ( config, pkg ) => {
 			process.exit( 1 ); // eslint-disable-line no-process-exit
 		}
 	};
-
 	app.context = context( app );
 	app.storage = storage( app );
 	app.git = git( app );

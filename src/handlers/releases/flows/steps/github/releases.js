@@ -6,7 +6,6 @@ module.exports = ( app, git ) => {
 		async getLatestVersion( state ) {
 			const { tagName } = await git.repos( state.repo.user, state.repo.name ).releases.latest.fetch();
 			_.set( state, "versions.latest", semver.clean( tagName.replace( /v?\.?(.*)+/, "$1" ) ) );
-			_.set( state, "tags.version", tagName );
 		},
 		async release( state ) {
 			const repo = git.repos( state.repo.user, state.repo.name );

@@ -2,9 +2,8 @@ const _ = require( "lodash" );
 const promisify = require( "es6-promisify" );
 
 module.exports = ( app ) => {
-	const { slapp } = app;
-
 	return ( msg ) => {
+		const { slapp } = app;
 		const meta = _.mapKeys( msg.meta, ( value, key ) => _.camelCase( key ) );
 		return {
 			meta,
