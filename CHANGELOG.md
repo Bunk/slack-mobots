@@ -1,5 +1,9 @@
 ## 3.x
 
+### 3.2.0
+
+* Support changing branches as a part of the flow.  Fix error handling to make it mo betta
+
 ### 3.1.0
 
 * Added tagging support for a repository
