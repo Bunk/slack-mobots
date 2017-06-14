@@ -1,5 +1,9 @@
 ## 3.x
 
+### 3.2.1
+
+* Removed dead code
+
 ### 3.2.0
 
 * Support changing branches as a part of the flow.  Fix error handling to make it mo betta
