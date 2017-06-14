@@ -13,15 +13,7 @@ module.exports = {
 		level: process.env.LOG_LEVEL || "info"
 	},
 	github: {
-		token: process.env.GITHUB_TOKEN || "",
-		repositories: {
-			upstream: {
-				name: "leankit-mobile",
-				uri: process.env.GITHUB_REPOSITORIES_UPSTREAM_URI || "https://${ token }@github.com/${ user }/${ name }.git",
-				user: process.env.GITHUB_REPOSITORIES_UPSTREAM_USER || "BanditSoftware",
-				token: process.env.GITHUB_REPOSITORIES_UPSTREAM_TOKEN || ""
-			}
-		}
+		token: process.env.GITHUB_TOKEN || ""
 	},
 	hockey: {
 		token: process.env.HOCKEY_TOKEN || ""
