@@ -1,5 +1,9 @@
 ## 3.x
 
+### 3.2.2
+
+* Support tagging individual platforms for builds
+
 ### 3.2.1
 
 * Removed dead code
