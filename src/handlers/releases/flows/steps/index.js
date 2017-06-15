@@ -32,12 +32,20 @@ module.exports = ( app ) => {
 				return platform;
 			}
 
+			function versionTag( version, platforms ) {
+				let tag = `v.${ version }`;
+				if ( platforms.length === 1 ) {
+					tag += `+${ platforms[ 0 ].toLowerCase() }`;
+				}
+				return tag;
+			}
+
 			_.set( state, "release", {
 				name: state.answers.name,
 				notes: state.answers.notes.map( v => `* ${ v }` ).join( "\n" ),
 				platforms: state.answers.platforms.map( emojisize ).join( " " ),
 				version: state.answers.version,
-				tag: `v.${ state.answers.version }`,
+				tag: versionTag( state.answers.version, state.answers.platforms ),
 				target: state.answers.selectedBranch
 			} );
 		},
